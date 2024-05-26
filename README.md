@@ -2,7 +2,7 @@
 
 # DevTITANS 05 - HandsOn Linux - Equipe 0X
 
-Bem-vindo ao repositório da Equipe 0X do HandsON de Linux do DevTITANS! Este projeto contém um firmware para o ESP32 escrito em formato Arduino `.ino`, bem como um driver do kernel Linux escrito em C. O objetivo é demonstrar como criar uma solução completa de hardware e software que integra um dispositivo ESP32 com um sistema Linux.
+Bem-vindo ao repositório da Equipe "João" do HandsON de Linux do DevTITANS! Este projeto contém um firmware para o ESP32 escrito em formato Arduino `.ino`, bem como um driver do kernel Linux escrito em C. O objetivo é demonstrar como criar uma solução completa de hardware e software que integra um dispositivo ESP32 com um sistema Linux.
 
 ## Tabela de Conteúdos
 
@@ -20,11 +20,11 @@ Bem-vindo ao repositório da Equipe 0X do HandsON de Linux do DevTITANS! Este pr
 <img src="cartao.png" width="180" >
 
 
-- **Nome do(a) Aluno(a) 01:** Desenvolvedor do Firmware e Mantenedor do Projeto
-- **Nome do(a) Aluno(a) 02:** Desenvolvedor do Firmware
-- **Nome do(a) Aluno(a) 03:** Desenvolvedor do Driver Linux
-- **Nome do(a) Aluno(a) 04:** Desenvolvedor do Driver Linux
-- **Nome do(a) Aluno(a) 05:** Desenvolvedor do Firmware e Escritor da Documentação
+- **João Danilo:** Desenvolvedor do Firmware e Mantenedor do Projeto
+- **João Danilo:** Desenvolvedor do Firmware
+- **João Danilo:** Desenvolvedor do Driver Linux
+- **João Danilo:** Desenvolvedor do Driver Linux
+- **João Danilo:** Desenvolvedor do Firmware e Escritor da Documentação
 
 ## Introdução
 
@@ -91,7 +91,7 @@ Este projeto serve como um exemplo para desenvolvedores interessados em construi
 
 1. **Clone o Repositório:**
     ```sh
-    git clone https://github.com/seuusuario/Hands-On-Linux.git
+    git clone https://github.com/joaodanil0/Hands-On-Linux.git
     cd Hands-On-Linux
     ```
 
@@ -137,4 +137,4 @@ Depois que o driver e o firmware estiverem configurados, você poderá interagir
     
 ## Contato
 
-Para perguntas, sugestões ou feedback, entre em contato com o mantenedor do projeto em [maintainer@example.com](mailto:maintainer@example.com).
+Para perguntas, sugestões ou feedback, entre em contato com o mantenedor do projeto em [joaodanilo1992@gmail.com](mailto:joaodanilo1992@gmail.com).
