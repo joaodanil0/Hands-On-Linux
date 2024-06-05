@@ -2,11 +2,6 @@
 #include <linux/usb.h>
 #include <linux/slab.h>
 
-MODULE_AUTHOR("DevTITANS <devtitans@icomp.ufam.edu.br>");
-MODULE_DESCRIPTION("Driver de acesso ao SmartLamp (ESP32 com Chip Serial CP2102");
-MODULE_LICENSE("GPL");
-
-
 #define MAX_RECV_LINE 100 // Tamanho máximo de uma linha de resposta do dispositvo USB
 
 
@@ -15,8 +10,8 @@ static uint usb_in, usb_out;                       // Endereços das portas de e
 static char *usb_in_buffer, *usb_out_buffer;       // Buffers de entrada e saída da USB
 static int usb_max_size;                           // Tamanho máximo de uma mensagem USB
 
-#define VENDOR_ID   SUBSTITUA_PELO_VENDORID /* Encontre o VendorID  do smartlamp */
-#define PRODUCT_ID  SUBSTITUA_PELO_PRODUCTID /* Encontre o ProductID do smartlamp */
+#define VENDOR_ID   0x10C4 /* Encontre o VendorID  do smartlamp */
+#define PRODUCT_ID  0xEA60 /* Encontre o ProductID do smartlamp */
 static const struct usb_device_id id_table[] = { { USB_DEVICE(VENDOR_ID, PRODUCT_ID) }, {} };
 
 static int  usb_probe(struct usb_interface *ifce, const struct usb_device_id *id); // Executado quando o dispositivo é conectado na USB
@@ -50,7 +45,7 @@ static int usb_probe(struct usb_interface *interface, const struct usb_device_id
     usb_out = usb_endpoint_out->bEndpointAddress;
     usb_in_buffer = kmalloc(usb_max_size, GFP_KERNEL);
     usb_out_buffer = kmalloc(usb_max_size, GFP_KERNEL);
-
+    
     LDR_value = usb_read_serial();
 
     printk("LDR Value: %d\n", LDR_value);
@@ -65,25 +60,84 @@ static void usb_disconnect(struct usb_interface *interface) {
     kfree(usb_out_buffer);
 }
 
+static int extract_value(char *command) {
+
+    int counter = 0;
+    int i;
+    int j = 0;
+    long val = 0;
+    char *value = kmalloc(20, GFP_KERNEL);
+
+    for(i = 0; i < strlen(command); i++){
+
+        if(command[i] == ' '){
+            counter++;
+        }
+        
+        if(counter == 2){
+            i++;
+            break;
+        }
+    }
+        
+    for(; i < strlen(command); i++) {
+        value[j] = command[i];
+        j++;
+    }
+
+    value[j] = '\0';
+
+    // printk(KERN_INFO "Value: %s", value);
+    if(kstrtol(value, 10, &val) == 0){
+        kfree(value);
+        return val;
+    }
+    
+    kfree(value);
+    return -1;
+}
+
 static int usb_read_serial() {
     int ret, actual_size;
     int retries = 10;                       // Tenta algumas vezes receber uma resposta da USB. Depois desiste.
 
+    char *command = kmalloc(20, GFP_KERNEL);
+    
     // Espera pela resposta correta do dispositivo (desiste depois de várias tentativas)
     while (retries > 0) {
         // Lê os dados da porta serial e armazena em usb_in_buffer
             // usb_in_buffer - contem a resposta em string do dispositivo
             // actual_size - contem o tamanho da resposta em bytes
-        ret = usb_bulk_msg(smartlamp_device, usb_rcvbulkpipe(smartlamp_device, usb_in), usb_in_buffer, min(usb_max_size, MAX_RECV_LINE), &actual_size, 1000);
-        if (ret) {
-            printk(KERN_ERR "SmartLamp: Erro ao ler dados da USB (tentativa %d). Codigo: %d\n", ret, retries--);
-            continue;
+        
+        while(1)
+        {
+            ret = usb_bulk_msg(smartlamp_device, usb_rcvbulkpipe(smartlamp_device, usb_in), usb_in_buffer, min(usb_max_size, MAX_RECV_LINE), &actual_size, 10000); 
+
+            if (ret) {
+                printk(KERN_ERR "SmartLamp: Erro ao ler dados da USB (tentativa %d). Codigo: %d\n", retries--, ret);
+                break;
+            }
+            printk(KERN_INFO "Palavra1[%d]: %s", actual_size, usb_in_buffer);
+            strcat(command, usb_in_buffer);
         }
 
+        strcat(command, "\0");
+
+        int value = extract_value(command);
+
+        // printk(KERN_INFO "value1: %d", value);
+        
+        // printk(KERN_INFO "Palavra1: %s", command);
+
+        kfree(command);
         //caso tenha recebido a mensagem 'RES_LDR X' via serial acesse o buffer 'usb_in_buffer' e retorne apenas o valor da resposta X
         //retorne o valor de X em inteiro
-        return 0;
+        return value;
     }
 
     return -1; 
 }
+
+MODULE_AUTHOR("DevTITANS <devtitans@icomp.ufam.edu.br>");
+MODULE_DESCRIPTION("Driver de acesso ao SmartLamp (ESP32 com Chip Serial CP2102");
+MODULE_LICENSE("GPL");

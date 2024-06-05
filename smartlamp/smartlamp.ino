@@ -13,7 +13,8 @@ void setup() {
     // pinMode(LDR_PIN, INPUT);
     
     ledUpdate(ledValue);
-    Serial.printf("SmartLamp Initialized.\n");
+    delay(5000);
+    processCommand("GET_LDR");
 }
 
 // Função loop será executada infinitamente pelo ESP32
@@ -53,11 +54,25 @@ void processCommand(String command) {
     // compare o comando com os comandos possíveis e execute a ação correspondente  
     if(command == "GET_LED")
     {
-      Serial.println("RES GET_LED " + String(ledValue));
+      char str[20];
+      sprintf(str, "RES GET_LED %d", ldrValue);
+      // Serial.println("RES GET_LED " + String(ledValue));
+      for(int i = 0; i < strlen(str); i++)
+      {
+        Serial.write(str[i]);
+      }
     }  
     else if(command == "GET_LDR")
     {
-      Serial.println("RES GET_LDR " + String(ldrGetValue()));
+      // Serial.println("RES GET_LDR " + String(ldrGetValue()));
+      char str[20] = "";
+      sprintf(str, "RES GET_LDR %d", ldrValue);
+      // Serial.println("RES GET_LED " + String(ledValue));
+      Serial.write(str);
+      // for(int i = 0; i < strlen(str); i++)
+      // {
+      //   Serial.write(str[i]);
+      // }
     }
     else if( extractCommand(command) == "SET_LED")
     {
