@@ -1,4 +1,4 @@
-obj-m += serial.o
+obj-m += my_usb_driver.o
 PWD := $(CURDIR)
 
 all:

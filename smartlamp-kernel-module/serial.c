@@ -111,13 +111,13 @@ static int usb_read_serial() {
         
         while(1)
         {
-            ret = usb_bulk_msg(smartlamp_device, usb_rcvbulkpipe(smartlamp_device, usb_in), usb_in_buffer, min(usb_max_size, MAX_RECV_LINE), &actual_size, 10000); 
+            ret = usb_bulk_msg(smartlamp_device, usb_rcvbulkpipe(smartlamp_device, usb_in), usb_in_buffer, min(usb_max_size, MAX_RECV_LINE), &actual_size, 1000); 
 
             if (ret) {
                 printk(KERN_ERR "SmartLamp: Erro ao ler dados da USB (tentativa %d). Codigo: %d\n", retries--, ret);
                 break;
             }
-            printk(KERN_INFO "Palavra1[%d]: %s", actual_size, usb_in_buffer);
+            // printk(KERN_INFO "Palavra1[%d]: %s", actual_size, usb_in_buffer);
             strcat(command, usb_in_buffer);
         }
 
