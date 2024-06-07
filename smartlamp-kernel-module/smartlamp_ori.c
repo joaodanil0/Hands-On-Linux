@@ -88,7 +88,6 @@ static char **extract_cmd_value(char *command) {
     int counter = 0;
     int i;
     int j = 0;
-    // long val = 0;
     char **cmd_value = kmalloc(2, GFP_KERNEL);
     char *value = kmalloc(20, GFP_KERNEL);
     char *cmd = kmalloc(20, GFP_KERNEL);
@@ -124,13 +123,6 @@ static char **extract_cmd_value(char *command) {
     cmd_value[0] = cmd;
     cmd_value[1] = value;
 
-    // // printk(KERN_INFO "Value: %s", value);
-    // if(kstrtol(value, 10, &val) == 0){
-    //     kfree(value);
-    //     return val;
-    // }
-    
-    // kfree(value);
     return cmd_value;
 }
 
