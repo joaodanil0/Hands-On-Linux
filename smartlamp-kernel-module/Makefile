@@ -1,4 +1,6 @@
-obj-m += my_usb_driver.o
+CONFIG_MODULE_SIG=n
+
+obj-m += smartlamp.o
 PWD := $(CURDIR)
 
 all:
